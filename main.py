@@ -1,6 +1,7 @@
 import requests
+import ipfsapi
 
-def make_payment(amount, currency, payee_address):
+def make_payment(amount, currency, payee_address, file):
     """Make an Interledger payment.
 
     Args:
@@ -18,6 +19,11 @@ def make_payment(amount, currency, payee_address):
         "payee_address": payee_address,
     }
 
+    api = ipfsapi.Client()
+
+    # Store the file on IPFS
+    ipfs_cid = store_file_on_ipfs(file)
+
     response = requests.post("https://example.com/api/payments", json=payload)
 
     if response.status_code == 200:
@@ -27,7 +33,7 @@ def make_payment(amount, currency, payee_address):
         payment_status = "failed"
         payment_id = None
 
-    return payment_status, payment_id
+    return payment_status, payment_id, ipfs_cid
 
 # Example usage:
 
